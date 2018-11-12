@@ -1,10 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 
 namespace TechJobsConsole
 {
+    public static class StringExtensions
+    {
+        public static bool Contains(this string source, string toCheck, StringComparison comp)
+        {
+            return source?.IndexOf(toCheck, comp) >= 0;
+        }
+    }
+
     class JobData
     {
         static List<Dictionary<string, string>> AllJobs = new List<Dictionary<string, string>>();
@@ -55,6 +64,25 @@ namespace TechJobsConsole
                 }
             }
 
+            return jobs;
+        }
+
+        public static List<Dictionary<string, string>> FindByValue(string searchTerm)
+        {
+            LoadData();
+
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> item in job)
+                {
+                    if (item.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                    {
+                        jobs.Add(job);
+                    }
+                }
+            }
             return jobs;
         }
 
